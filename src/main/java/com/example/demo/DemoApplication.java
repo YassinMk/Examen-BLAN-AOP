@@ -1,7 +1,9 @@
 package com.example.demo;
 
+import com.example.demo.AOP.Service.ExampleService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Date;
 
@@ -9,8 +11,8 @@ import java.util.Date;
 public class DemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-        // Création des agents
+        ApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+        //Création des agents
         Agent agent1 = new Agent("Agent1");
         Agent agent2 = new Agent("Agent2");
         Agent agent3 = new Agent("Agent3");
@@ -47,8 +49,27 @@ public class DemoApplication {
         container.ajouterAgent(agent2.getNom(), agent2);
         container.ajouterAgent(agent3.getNom(), agent3);
 
-        // Afficher l'état du conteneur
-        container.afficherEtat();
+        // Utilisation d'un afficheur HDMI
+        HDMI ecranHDMI = new EcranHDMI();
+        container.afficherEtat(ecranHDMI);
+
+        // Utilisation d'un afficheur VGA via un adaptateur
+        EcranVGA ecranVGA = new EcranVGA();
+        HDMI adaptateur = new AdaptateurVGAEnHDMI(ecranVGA);
+        container.afficherEtat(adaptateur);
+
+        // Test AOP
+        ExampleService exampleService = context.getBean(ExampleService.class);
+
+        // Test Logging Aspect
+        exampleService.executeTask();
+
+        // Test Caching Aspect
+        System.out.println(exampleService.fetchData());
+        System.out.println(exampleService.fetchData()); // Should return cached result
+
+        // Test Security Aspect
+        exampleService.secureOperation();
     }
 
 }

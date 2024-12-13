@@ -29,9 +29,9 @@ class AgentContainer {
         return agents.get(nom);
     }
 
-    public void afficherEtat() {
-        agents.values().forEach(agent -> {
-            System.out.println("Agent: " + agent.getNom());
-        });
+    public void afficherEtat(HDMI afficheur) {
+        StringBuilder etat = new StringBuilder();
+        agents.values().forEach(agent -> etat.append("Agent: ").append(agent.getNom()).append("\n"));
+        afficheur.afficherEtat(etat.toString());
     }
 }
